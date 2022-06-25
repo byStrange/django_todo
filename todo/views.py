@@ -1,6 +1,7 @@
+import json
 from django.shortcuts import render
+from django.http import JsonResponse
 from todo.models import *
-
 # Create your views here.
 
 
@@ -17,7 +18,7 @@ def todoListDetail(request, slug):
     user_list = user_list_init(request)
     todo_list = user_list.todoLists.get(slug=slug)
     todos = todo_list.todos.all()
-    return render(request, 'index.html', {'todos': todos, "todo_list_name": todo_list.title})
+    return render(request, 'index.html', {'todos': todos, "todo_list": todo_list})
 
 
 def todoList(request):
@@ -28,11 +29,34 @@ def todoList(request):
 
 
 def addTodo(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        data = json.loads(request.GET.get('data'))
         user_list = user_list_init(request)
-        todo_list = user_list.todoLists.get(slug=request.POST.get('todo_list_slug')) 
-        print(request.POST)
-        todo = Todo(title=request.POST.get('title'), memo=request.POST.get('memo'), important=request.POST.get('important'), starred=request.POST.get('starred'), datecompleted=request.POST.get('datecompleted'))
-        todo_list.todos.add(todo)
+        slug = data['todo_list_slug']
+        title = data['title']
+        memo = data['memo']
+        important = data['important']
+        starred = data['starred']
+        datacompleted = data['dateCompleted']
+        print(slug)
+        print(title)
+        print(memo)
+        print(important)
+        print(starred)
+        print(datacompleted)
+        todo_list = TodoList.objects.get(users=user_list, slug=slug)
+        todo = Todo.objects.create(title=title, memo=memo, important=important, starred=starred)
         todo.save()
-        return render(request, 'index.html', {'todos': todo_list.todos.all(), "todo_list_name": todo_list.title})
+        print(todo)
+        todo_list.todos.add(todo)
+        return JsonResponse({'status': 200, 'title': todo.title, 'id': todo.id})
+        # todo_list = TodoList.objects.get(users=user_list,slug=slug)
+        # todo_list = user_list.TodoLists.get(slug=slug) 
+        # for todosss in user_list.todoLists.all():
+            # print('User list', todosss)
+            # t = todosss.objects.get(slug=slug)
+            # print(t)
+        # print('user list', user_list.todoLists.all)
+        # todo = Todo(title=title, memo=memo, important=important, starred=starred, datecompleted=datacompleted)
+        # todo_list.todos.add(todo)
+        # todo.save()

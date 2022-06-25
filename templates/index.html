@@ -6,11 +6,11 @@
   <p class="text-muted">
     This list includes <span class="marked text-danger">{{ todos|length }}</span> {% if todos|length == 1 %} todo{% else %}todos{% endif %}
   </p>
-  <div class="mb-3">
+  <div class="mb-3" id="todo_wrapper">
     {% for todo in todos %} {% if not todo.done %}
     <div class="col-12">
       <div class="todo todo-primary">
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2" >
           <div class="todo-action is-done">
             <input
               type="checkbox"
@@ -80,7 +80,6 @@
 >
   <div class="col-12">
     <div class="form-outline" >
-        {% comment %} csrf {% endcomment %}
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <input
         type="text"
@@ -92,7 +91,7 @@
   </div>
 
   <div class="col-12">
-    <button type="submit" class="btn btn-primary" onclick="addTodo('{{ todo_list_name }}')">Save</button>
+    <button type="submit" class="btn btn-primary" onclick="addTodo('{{ todo_list.slug }}')">Save</button>
   </div>
 </div>
 {% endblock content %}
