@@ -12,6 +12,7 @@
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .todo .todo-actions {
@@ -43,6 +44,10 @@ input {
 .todo:hover .todo-actions button {
   transform: translateY(0);
   opacity: 1;
+}
+
+.todos .col-12:not(:last-child) {
+  margin-bottom: 10px;
 }
 
 .todo .todo-actions button:hover {

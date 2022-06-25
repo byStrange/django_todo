@@ -56,5 +56,10 @@ class Todo(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     datecompleted = models.DateTimeField(null=True, blank=True)
 
+
     def __str__(self):
         return self.title
+
+
+    def lengthOfDone(self):
+        return len(self.todos.filter(done=True))
