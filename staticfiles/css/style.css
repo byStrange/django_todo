@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+* {
+  font-family: Poppins, sans-serif;
+}
+
+.todo {
+  padding: 8px 10px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.todo .todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.todo .todo-actions button,
+input {
+  cursor: pointer;
+}
+
+.todo .todo-actions button {
+  background-color: transparent;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  color: gray;
+  transform: translateY(-200%);
+  transition: cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s, opacity 0.5s;
+  opacity: 0;
+  transition-delay: var(--delay);
+}
+
+.todo:hover .todo-actions button {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.todo .todo-actions button:hover {
+  color: var(--color);
+}
+
+a > .card *,
+a:not(.link) {
+  text-decoration: none;
+}
+
+.todo-done {
+  opacity: 0.7;
+}
+
+.todo-done .todo-title {
+  text-decoration: line-through;
+}
+
+.todo.todo-done:hover .todo-actions button {
+  transform: translateY(-200%);
+}

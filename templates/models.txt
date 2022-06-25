@@ -1,0 +1,34 @@
+TODO app models # models structure for the app
+
+
+UserList
+    id - int
+    user - class:User
+    Lists - class:List
+    todos - class:Todo
+    total todos - int
+    total list - int
+
+
+List 
+    id - int
+    name - str
+    todos - class:Todo
+    total todos - int
+    created at - str
+
+
+Todo 
+    id - int
+    title - str
+    memo - str blank=true
+    todolist - class:List
+    important - bool   blank=true
+    priority - str  blank=true
+    done - bool
+    liked - bool  # starred - bool
+    priority - str
+    created at - str
+    updated at - str
+    status - str
+    list - class:List

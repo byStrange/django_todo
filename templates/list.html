@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  {% if todo_lists %}
+  <div class="col-md-6 col-sm-12">
+    {% for list in todo_lists %}
+    <a href="{% url 'list' list.slug %}" >
+        <div class="card todo-list shadow" type="button">
+            <div class="card-body">
+              <h5 class="card-title">{{ list.title }}</h5>
+              {% if list.memo %}
+              <p class="text-muted">{{ list.memo }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+    </a>
+  {% endfor %} {% else %}
+  <div class="col-6" style="margin: 0 auto">
+    <h5 class="card-title">You have not any lists yet</h5>
+    <div class="mt-4">
+      <button type="button mt-5" class="btn btn-primary btn-sm">
+        Create one!
+      </button>
+      <span class="text-muted">or</span>
+      <button type="button" class="btn btn-outline-primary btn-sm">
+        Just create task
+      </button>
+    </div>
+    {% endif %}
+  </div>
+  {% endblock content %}
+</div>
