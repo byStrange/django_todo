@@ -31,6 +31,7 @@ class TodoList(models.Model):
     slug = models.SlugField(unique=True)
     datecompleted = models.DateTimeField(null=True, blank=True)
 
+
     def addTodo(self, todo):
         self.todos.add(todo)
     

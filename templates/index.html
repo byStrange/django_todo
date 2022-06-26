@@ -1,5 +1,9 @@
 {% extends 'base.html' %} {% block content %}
+<div class="action-back">
 
+    <button class="circled" id="prev" onclick="window.history.back()"><i class="fa fa-angle-left"></i></button>
+
+</div>
 <h4 class="text-center my-3 pb-3">{{ todo_list.title }}</h4>
 
 <div class="row mb-4">

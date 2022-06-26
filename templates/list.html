@@ -1,8 +1,10 @@
 {% extends 'base.html' %} {% block content %}
+<h4 class="text-center my-3 pb-3">Your Lists</h4>
+
 <div class="row">
   {% if todo_lists %}
+  {% for list in todo_lists %}
   <div class="col-md-6 col-sm-12">
-    {% for list in todo_lists %}
     <a href="{% url 'list' list.slug %}" >
         <div class="card todo-list shadow" type="button">
             <div class="card-body">
@@ -12,21 +14,39 @@
               {% endif %}
             </div>
           </div>
-        </div>
     </a>
-  {% endfor %} {% else %}
+  </div>
+  {% endfor %}
+   <div class="col-md-6 col-sm-12">
+    <div class="card add-list shadow" type="button" onclick="showModal()">
+      <div class="card-body">
+        +
+      </div>
+    </div>
+  </div>
+</div>
+  {% else %}
   <div class="col-6" style="margin: 0 auto">
     <h5 class="card-title">You have not any lists yet</h5>
-    <div class="mt-4">
-      <button type="button mt-5" class="btn btn-primary btn-sm">
-        Create one!
-      </button>
-      <span class="text-muted">or</span>
-      <button type="button" class="btn btn-outline-primary btn-sm">
-        Just create task
-      </button>
-    </div>
     {% endif %}
-  </div>
-  {% endblock content %}
 </div>
+
+
+<div class="modal">
+  <div class="modal-dialog shadow border p-4 rounded">
+      <div class="form">
+        <div class="form-group mb-4">
+          <label for="title" class="position-relative mb-1">Give a name to your list
+          </label>
+          <input type="text" class="form-control" id="title" placeholder="title">
+      </div>
+      <div class="form-group mb-3">
+        <label for="memo" class="mb-1">Add a some description for this list</label>
+        <input type="text" class="form-control" id="memo" placeholder="memo">
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" onclick="createList()">Create</button>
+  </div>
+</div>
+
+
+{% endblock %}

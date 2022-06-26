@@ -70,3 +70,53 @@ a:not(.link) {
 .todo.todo-done:hover .todo-actions button {
   transform: translateY(-200%);
 }
+
+.modal {
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal .modal-dialog {
+  pointer-events: all;
+  background-color: #fff;
+  opacity: 0;
+  transition: 50s;
+  transform: scale(0.5);
+}
+
+.modal.show {
+  display: flex !important;
+}
+
+.modal.show .modal-dialog {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fa-asterisk {
+  color: crimson;
+  font-size: 10px;
+}
+
+.modal label[for="title"]::after {
+  content: "*";
+  color: crimson;
+}
+
+.add-list {
+  height: 100% !important;
+  background:#fff3f3ad;
+  border: 2px dashed #ccc;
+}
+
+.add-list .card-body {
+  display: flex;
+  align-items: center;
+  font-size: 35px;
+  color: #ccc;
+  justify-content: center;
+  user-select: none;
+}

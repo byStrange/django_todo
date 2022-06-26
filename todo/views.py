@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from todo.models import *
 from datetime import datetime
-# Create your views here.
+from django.contrib.auth import login, authenticate, logout
+# import authenticated, 
 
 
 def user_list_init(request):
@@ -24,9 +25,12 @@ def todoListDetail(request, slug):
 
 
 def todoList(request):
-    user_list = user_list_init(request)
-    todo_lists = user_list.todoLists.all()
-    return render(request, 'list.html', {'todo_lists': todo_lists})
+    if request.user.is_authenticated:
+        user_list = user_list_init(request)
+        todo_lists = user_list.todoLists.all()
+        return render(request, 'list.html', {'todo_lists': todo_lists})
+    else:
+        return render(request, 'login.html')
 
 
 def changeTodo(request):
@@ -34,6 +38,12 @@ def changeTodo(request):
         data = json.loads(request.GET.get('data'))
         user_list = user_list_init(request)
         if data['action'] == "C":
+            if data['do'] == 'create_list':
+                todo_list = TodoList(
+                    title=data['title'], slug=data['slug'], memo=data['memo'], created=datetime.now())
+                todo_list.save()
+                user_list.addTodoList(todo_list)
+                return JsonResponse({'status': 'success', 'response': {'ok': True,'slug': todo_list.slug, 'title': todo_list.title, 'id': todo_list.id, 'memo': todo_list.memo, 'created': todo_list.created}})
             slug = data['todo_list_slug']
             title = data['title']
             memo = data['memo']
@@ -45,7 +55,7 @@ def changeTodo(request):
             todo.save()
             todo_list.addTodo(todo)
             return JsonResponse({'ok': True, 'title': todo.title, 'id': todo.id})
-        elif data['action'] == "E":
+        elif data['action'] == "U":
             todo_id = data['id']
             todo = Todo.objects.get(id=todo_id)
 

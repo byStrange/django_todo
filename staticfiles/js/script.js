@@ -8,7 +8,7 @@ String.prototype.parse = function () {
 
 var url = "/todo/change/"; // this url for both adding and editing )
 
-function addTodo(todoListSlug) {
+const addTodo = function (todoListSlug) {
   var title = document.querySelector(".form-outline #title");
   var data = {
     action: "C", //?  "C" stands for "CREATE" at CRUD
@@ -17,6 +17,7 @@ function addTodo(todoListSlug) {
     memo: "",
     important: false,
     done: false,
+    do: 'create_todo',
     starred: false,
     dateCompleted: null,
     dateCreated: new Date(),
@@ -79,9 +80,9 @@ function addTodo(todoListSlug) {
   };
   xhttp.open("GET", url + `?data=${data}`, true);
   xhttp.send();
-}
+};
 
-var reload = function ($) {
+const reload = function ($) {
   $.querySelectorAll('[data-ref="trigger"]') // trigger for mark todo as done
     .forEach((trigger) => {
       var todoId = trigger.id || trigger.getAttribute("id");
@@ -89,7 +90,7 @@ var reload = function ($) {
         var _do = this.checked ? "mark" : "unmark";
         var data = {
           id: todoId,
-          action: "E",
+          action: "U", //? "U" stands for "UPDATE" at CRUD
           do: _do,
         }.stringify();
         var http = window.XMLHttpRequest
@@ -126,3 +127,39 @@ var reload = function ($) {
 };
 
 reload(document);
+
+var modal = document.querySelector(".modal");
+function showModal() {
+  modal.classList.add("show");
+  modal.classList.remove("hide");
+}
+
+const createList = function () {
+  var title = document.querySelector(".modal #title");
+  var memo = document.querySelector(".modal #memo");
+  var data = {
+    action: "C", //? "C" stands for "CREATE" at CRUD
+    title: title.value,
+    memo: memo.value,
+    slug: title.value.toLowerCase().replace(/\s/g, "-"),
+    do: "create_list",
+  }.stringify();
+  var xhttp = window.XMLHttpRequest
+    ? new window.XMLHttpRequest()
+    : new ActiveXObject("Microsoft.XMLHTTP");
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4 && xhttp.status === 200) {
+      var data = JSON.parse(this.responseText);
+      var { response } = data;
+      console.log(response);
+      if (response.ok) {
+        modal.classList.remove("show");
+        modal.classList.add("hide");
+      }
+    } else {
+      console.log("Error adding data" + this.responseText);
+    }
+  };
+  xhttp.open("GET", url + `?data=${data}`, true);
+  xhttp.send();
+};
