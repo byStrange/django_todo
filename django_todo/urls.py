@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from todo.views import todoListDetail, todoList
+from todo.views import todoListDetail, todoList, userRegister, userLogin
 
 
 urlpatterns = [
@@ -25,4 +25,7 @@ urlpatterns = [
     path('list/<str:slug>/', todoListDetail, name='list'),
 
     path('todo/', include('todo.urls')),
+
+    path('register/', userRegister, name='register'),
+    path('login/', userLogin, name='login'),
 ]

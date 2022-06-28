@@ -16,6 +16,31 @@ def user_list_init(request):
     return user_list
 
 
+def userLogin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'ok': True, 'response': {'username': user.username}})
+        else:
+            return JsonResponse({'ok': False, 'status': 'User not found', 'response': {'username': username}})
+    else:
+        return render(request, 'login.html')
+
+
+def userRegister(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = User.objects.create_user(username=username, password=password)
+        user.save()
+        return JsonResponse({'ok': True})
+    else:
+        return render(request, 'register.html')
+
+
 def todoListDetail(request, slug):
     user_list = user_list_init(request)
     todo_list = user_list.todoLists.get(slug=slug)
