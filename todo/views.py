@@ -1,6 +1,6 @@
 import json
 from urllib.request import Request
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from todo.models import *
 from datetime import datetime
@@ -21,13 +21,15 @@ def userLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'ok': True, 'response': {'username': user.username}})
-        else:
-            print(user)
-            return JsonResponse({'ok': False, 'status': 'User not found', 'response': {'username': username, 'password': password}})
+        try:
+            user = User.objects.get(username=username)
+            if user.password == password:
+                login(request, user)
+                return JsonResponse({'ok': True, 'response': {'username': user.username}})
+            else:
+                return JsonResponse({'ok': False, 'response': {'username': user.username}})
+        except:
+            return redirect('/login')
     else:
         return render(request, 'login.html')
 
@@ -36,10 +38,9 @@ def userRegister(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print('username = ' + username, 'password = '+ password)
         user = User.objects.create(username=username, password=password)
-        print(user)
         user.save()
+        login(request,user)
         return JsonResponse({'ok': True})
     else:
         return render(request, 'register.html')
@@ -61,6 +62,7 @@ def todoList(request):
         return render(request, 'list.html', {'todo_lists': todo_lists})
     else:
         return render(request, 'login.html')
+
 
 def changeTodo(request):
     if request.method == 'GET':
@@ -95,7 +97,6 @@ def changeTodo(request):
                 "important": todo.important,
                 'starred': todo.starred,
             }
-            print(data['do'])
             if data['do'] == 'mark':
                 todo.done = True
                 todo.datecompleted = datetime.now()

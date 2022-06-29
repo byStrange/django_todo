@@ -13,7 +13,7 @@
               <p class="text-muted">{{ list.memo }}</p>
               {% endif %}
             </div>
-          </div>
+        </div>
     </a>
   </div>
   {% endfor %}
@@ -26,8 +26,13 @@
   </div>
 </div>
   {% else %}
-  <div class="col-6" style="margin: 0 auto">
-    <h5 class="card-title">You have not any lists yet</h5>
+  <div class="col-md-6 col-sm-12">
+    <div class="card add-list shadow" type="button" onclick="showModal()">
+      <div class="card-body">
+        +
+      </div>
+    </div>
+  </div>
     {% endif %}
 </div>
 
