@@ -1,16 +1,17 @@
 import json
+from urllib.request import Request
 from django.shortcuts import render
 from django.http import JsonResponse
 from todo.models import *
 from datetime import datetime
 from django.contrib.auth import login, authenticate, logout
-# import authenticated, 
+from django.contrib.auth.models import User
 
 
 def user_list_init(request):
     try:
         user_list = UserList.objects.get(user=request.user)
-    except UserList.DoesNotExist:
+    except:
         user_list = UserList(user=request.user)
         user_list.save()
     return user_list
@@ -25,7 +26,8 @@ def userLogin(request):
             login(request, user)
             return JsonResponse({'ok': True, 'response': {'username': user.username}})
         else:
-            return JsonResponse({'ok': False, 'status': 'User not found', 'response': {'username': username}})
+            print(user)
+            return JsonResponse({'ok': False, 'status': 'User not found', 'response': {'username': username, 'password': password}})
     else:
         return render(request, 'login.html')
 
@@ -34,7 +36,9 @@ def userRegister(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = User.objects.create_user(username=username, password=password)
+        print('username = ' + username, 'password = '+ password)
+        user = User.objects.create(username=username, password=password)
+        print(user)
         user.save()
         return JsonResponse({'ok': True})
     else:
@@ -50,13 +54,13 @@ def todoListDetail(request, slug):
 
 
 def todoList(request):
+    print(request.user)
     if request.user.is_authenticated:
         user_list = user_list_init(request)
         todo_lists = user_list.todoLists.all()
         return render(request, 'list.html', {'todo_lists': todo_lists})
     else:
         return render(request, 'login.html')
-
 
 def changeTodo(request):
     if request.method == 'GET':
