@@ -1,131 +1,59 @@
 {% extends 'base.html' %} {% block content %}
-<div class="action-back">
-
-    <button class="circled" id="prev" onclick="window.history.back()"><i class="fa fa-angle-left"></i></button>
-
-</div>
-<h4 class="text-center my-3 pb-3">{{ todo_list.title }}</h4>
-
-<div class="row mb-4">
-  <p class="text-muted">
-    This list includes
-    <span class="marked text-danger">{{ todos|length }}</span> {% if todos|length == 1 %} todo{% else %}todos{% endif %}
-  </p>
-  <div class="mb-3 row todos todos-undone">
-    {% for todo in todos %} {% if not todo.done %}
-    <div class="col-12">
-      <div class="todo shadow-sm border todo-primary" id="todo{{ todo.id }}">
-        <div class="d-flex gap-2">
-          <div class="todo-action is-done">
-            <input
-              type="checkbox"
-              class="todo-check form-check-input"
-              id="{{ todo.id }}"
-              data-action="mark"
-              data-ref="trigger"
-            />
-          </div>
-          <div class="todo-title">{{ todo.title }}</div>
-        </div>
-        <div class="todo-actions">
-          <button
-            class="todo-action todo-action-star"
-            style="--delay: 150ms; --color: red"
-          >
-            <i class="fas fa-heart"></i>
-          </button>
-          <button
-            class="todo-action todo-action-edit"
-            style="--delay: 100ms; --color: black"
-          >
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-          <button
-            class="todo-action todo-action-delete"
-            style="--delay: 50ms; --color: red"
-          >
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    {% endif %} {% endfor %}
-  </div>
-  <hr />
-
-  <p class="text-muted">
-    {% if todos|length == 1 %} Todo{% else %}Todos{% endif %} that has been done
-  </p>
-  <div class="row todos todos-done">
-    {% for todo in todos %} {% if todo.done %}
-    <div class="col-12">
-      <!-- section for done tasks -->
-      <div class="todo todo-done" id="todo{{ todo.id }}">
-        <div class="d-flex gap-2">
-          <div class="todo-action is-done">
-            <input
-              type="checkbox"
-              class="todo-check form-check-input"
-              id="{{ todo.id }}"
-              checked
-              data-ref="trigger"
-            />
-          </div>
-          <div class="todo-title text-muted">{{ todo.title }}</div>
-        </div>
-        <div class="todo-actions">
-          <button
-            class="todo-action todo-action-star"
-            style="--delay: 150ms; --color: red"
-          >
-            <i class="fas fa-heart"></i>
-          </button>
-          <button
-            class="todo-action todo-action-edit"
-            style="--delay: 100ms; --color: black"
-          >
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-          <button
-            class="todo-action todo-action-delete"
-            style="--delay: 50ms; --color: red"
-          >
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    {% endif %} {% endfor %}
-  </div>
-</div>
-
-<div
-  class="row row-cols-lg-auto g-3 justify-content-center align-items-center pb-2"
->
-  <div class="col-12">
-    <div class="form-outline">
-      <input
-        type="hidden"
-        name="csrfmiddlewaretoken"
-        value="{{ csrf_token }}"
-      />
-      <input
-        type="text"
-        id="title"
-        class="form-control"
-        placeholder="enter a task here"
-      />
-    </div>
-  </div>
-
-  <div class="col-12">
-    <button
-      type="submit"
-      class="btn btn-primary"
-      onclick="addTodo('{{ todo_list.slug }}')"
+<h4 class="text-center my-3 pb-3">Welcom to Todo</h4>
+<p class="text-muted">
+  This is a simple todo app that I created to learn how to use Django. This is a
+  test version of the app. I will be adding more features to it. I hope you
+  enjoy it.
+</p>
+<h5 class="text-center my-3 pb-3">Features</h5>
+<ul class="list-group w-50">
+  <li class="list-group-item">
+    <h6 class="text-center">
+      <i class="fas fa-check-circle"></i>
+      <span class="text-muted">Add Tasks</span>
+    </h6>
+  </li>
+  <li class="list-group-item">
+    <h6 class="text-center">
+      <i class="fas fa-check-circle"></i>
+      <span class="text-muted">Delete Tasks</span>
+    </h6>
+  </li>
+  <li class="list-group-item">
+    <h6 class="text-center">
+      <i class="fas fa-check-circle"></i>
+      <span class="text-muted">Edit Tasks</span>
+    </h6>
+  </li>
+  <li class="list-group-item">
+    <h6 class="text-center">
+      <i class="fas fa-check-circle"></i>
+      <span class="text-muted">Mark Tasks</span>
+    </h6>
+  </li>
+  <li class="list-group-item">
+    <h6 class="text-center">
+      <i class="fas fa-check-circle"></i>
+      <span class="text-muted">View Tasks</span>
+    </h6>
+  </li>
+</ul>
+<h5 class="mt-5 pb-3">
+  Start with creating a new account or logging in existing account
+</h5>
+{% if request.user.is_authenticated %}
+<a href="{% url 'logout' %}" class="btn btn-primary btn-block"> Logout </a>
+<a href="{% url 'accounts:lists' request.user.username %}" class="btn btn-outline-secondary">Dashboard</a>
+<a href="accounts/{{ request.user.username }}" class="btn btn-outline-secondary">Profile</a>
+{% else %}
+<div class="row">
+  <div class="col-3">
+    <a href="{% url 'register' %}" class="btn btn-primary btn-block"
+      >Register</a
     >
-      Save
-    </button>
+  </div>
+  <div class="col-3">
+    <a href="{% url 'login' %}" class="btn btn-primary btn-block">Login</a>
   </div>
 </div>
-{% endblock content %}
+{% endif %} {% endblock content %}

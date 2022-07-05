@@ -3,6 +3,33 @@
 
 <form class="form" method="POST" action="{% url 'register' %}">
     {% csrf_token %}
+    <div class="mb-3">
+      <label for="username" class="form-label">Your first name</label>
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        placeholder="first name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">Your last name</label>
+      <input
+        type="text"
+        class="form-control"
+        name="surname"
+        placeholder="last name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">Your email</label>
+      <input
+        type="email"
+        class="form-control"
+        name="email"
+        placeholder="email"
+      />
+    </div>
   <div class="mb-3">
     <label for="username" class="form-label">Your username</label>
     <input

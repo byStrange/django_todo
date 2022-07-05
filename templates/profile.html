@@ -1,0 +1,127 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %}
+
+<h4 class="text-center my-3 pb-3 d-flex align-items-center justify-content-center position-relative">
+  <span class="position-relative"> {{ user.user.first_name }} {{ user.user.last_name }} {% if is_verified %}
+    <div style="position: absolute; right: -30px; top: -5px">
+      <img src="{% static 'verified.png' %}" alt="logo" width="28" />
+    </div>
+    {% endif %}</span>
+    {% if request.user.username != user.user.username %}
+      <button class="btn btn-primary justify-self-last" style="position:absolute; right: 0;">
+        Follow
+      </button>
+    {% endif %}
+</h4>
+
+<div class="row mt-2">
+  <div class="col-md-4">
+    <a href="lists/">
+      <div
+        class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
+      >
+        <h2>{{ todo_lists|length }}</h2>
+        <hr width="100%" />
+        <div class="card-title">
+          <span>Lists</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="">
+      <div
+        class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
+      >
+        <h2>{{ todos|length }}</h2>
+        <hr width="100%" />
+        <div class="card-title">
+          <span>Todos</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-2">
+    <a href="followers/">
+      <div
+        class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
+      >
+        <h2>{{ user.followers.all|length }}</h2>
+        <hr width="100%" />
+        <div class="card-title">
+          <span>Followers</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-2">
+    <a href="following/">
+      <div
+        class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
+      >
+        <h2>{{ user.following.all|length }}</h2>
+        <hr width="100%" />
+        <div class="card-title">
+          <span>Following</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="user_name">User Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="user_name"
+        name="user_name"
+        value="{{ user.user.username }}"
+        readonly
+      />
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="user_email">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="user_email"
+        name="user_email"
+        value="{{ user.user.email }}"
+        readonly
+      />
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="user_email">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="user_first_name"
+        name="user_first_name"
+        value="{{ user.user.first_name }}"
+        readonly
+      />
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="user_email">Last Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="user_last_name"
+        name="user_last_name"
+        value="{{ user.user.last_name }}"
+        readonly
+      />
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -22,7 +22,7 @@
 }
 
 .todo .todo-actions button,
-input {
+.todo .todo-actions input {
   cursor: pointer;
 }
 
@@ -108,8 +108,18 @@ a:not(.link) {
 
 .add-list {
   height: 100% !important;
-  background:#fff3f3ad;
+  background: #fff3f3ad;
   border: 2px dashed #ccc;
+}
+
+.modal .form {
+  position: relative;
+}
+
+.modal [data-action='closeModal'] {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
 }
 
 .add-list .card-body {
@@ -119,4 +129,13 @@ a:not(.link) {
   color: #ccc;
   justify-content: center;
   user-select: none;
+}
+
+@media screen and (max-width: 767px) {
+  .sm-mt-2 {
+    margin-top: .5rem!important;
+  }
+  .todo-list {
+    margin-top: 10px !important;
+  }
 }

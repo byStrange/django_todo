@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if following %}
+        <h3>You are following:</h3>
+        <ul>
+            {% for user in following %}
+                <li>{{ user.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted text-center">You are not following anyone.</p>
+    {% endif %}
+{% endblock %}

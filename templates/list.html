@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 pb-3">Your Lists</h4>
+<h4 class="text-center my-3 pb-3">{% if request.user.username == user%}Your Lists{%else%} {{user}}'s lists {%endif%}</h4>
 
 <div class="row">
   {% if todo_lists %}
   {% for list in todo_lists %}
   <div class="col-md-6 col-sm-12">
-    <a href="{% url 'list' list.slug %}" >
+    <a href="/accounts/{{ user }}/list/{{list.slug}}" >
         <div class="card todo-list shadow" type="button">
             <div class="card-body">
               <h5 class="card-title">{{ list.title }}</h5>
@@ -17,29 +17,35 @@
     </a>
   </div>
   {% endfor %}
-   <div class="col-md-6 col-sm-12">
-    <div class="card add-list shadow" type="button" onclick="showModal()">
-      <div class="card-body">
+   {% if request.user.username == user %}
+   <div class="col-md-6 col-sm-12 sm-mt-2">
+    <div class="card add-list shadow" type="button">
+      <div class="card-body open-modal">
         +
       </div>
     </div>
   </div>
+   {% endif %}
 </div>
   {% else %}
-  <div class="col-md-6 col-sm-12">
-    <div class="card add-list shadow" type="button" onclick="showModal()">
-      <div class="card-body">
-        +
+    {% if request.user.username == user %}
+    <div class="col-md-6 col-sm-12">
+      <div class="card add-list shadow" type="button">
+        <div class="card-body open-modal">
+          +
+        </div>
       </div>
     </div>
-  </div>
+    {% else %} <span class="text-center my-3 pb-3 text-muted">{{user}} has no lists</span>
+    {% endif %}
     {% endif %}
 </div>
 
 
 <div class="modal">
-  <div class="modal-dialog shadow border p-4 rounded">
+  <div class="modal-dialog shadow border p-4 rounded" style="width: 100%;">
       <div class="form">
+        <span class="fas fa-times" data-action="closeModal" id="closeModal" style="color: var(--bs-danger)"></span>
         <div class="form-group mb-4">
           <label for="title" class="position-relative mb-1">Give a name to your list
           </label>
@@ -49,7 +55,7 @@
         <label for="memo" class="mb-1">Add a some description for this list</label>
         <input type="text" class="form-control" id="memo" placeholder="memo">
       </div>
-      <button type="button" class="btn btn-primary btn-sm" onclick="createList()">Create</button>
+      <button type="button" class="btn btn-primary btn-sm"  onclick="createList()">Create</button>
   </div>
 </div>
 

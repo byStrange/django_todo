@@ -8,6 +8,9 @@ class UserList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     todoLists = models.ManyToManyField('TodoList', related_name='users')
     todos = models.ManyToManyField('Todo', blank=True)
+    followers = models.ManyToManyField('self', blank=True)
+    following = models.ManyToManyField('self', blank=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, default='profile_photos/default.svg')
 
     def __str__(self):
         return self.user.username
@@ -20,9 +23,6 @@ class UserList(models.Model):
         self.todos.add(todo)
 
 
-
-
-
 class TodoList(models.Model):
     title = models.CharField(max_length=100)
     memo = models.TextField(blank=True)
@@ -30,7 +30,7 @@ class TodoList(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
     datecompleted = models.DateTimeField(null=True, blank=True)
-
+    private = models.BooleanField(default=False)
 
     def addTodo(self, todo):
         self.todos.add(todo)

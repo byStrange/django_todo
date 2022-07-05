@@ -1,15 +1,22 @@
+
 from django.contrib import admin
 from django.urls import path, include
-from todo.views import todoListDetail, todoList, userRegister, userLogin
+from todo.views import profileView, todoListDetail, userRegister, userLogin, index, userLogout
 
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
-    path('', todoList, name='index'),
-    path('list/<str:slug>/', todoListDetail, name='list'),
 
-    path('todo/', include('todo.urls')),
+    path('', index, name='index'),
 
-    path('register/', userRegister, name='register'),
+
+    path('todo/', include('todo.urls'), name='todo'),
+
+    path('accounts/', include('accounts.urls', namespace='accounts')
+         ),    path('register/', userRegister, name='register'),
+
     path('login/', userLogin, name='login'),
+    path('logout/', userLogout, name='logout'),
+
 ]
