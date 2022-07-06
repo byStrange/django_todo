@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 
 class UserList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    todoLists = models.ManyToManyField('TodoList', related_name='users')
+    todoLists = models.ManyToManyField('TodoList', related_name='users', blank=True)
     todos = models.ManyToManyField('Todo', blank=True)
-    followers = models.ManyToManyField('self', blank=True)
-    following = models.ManyToManyField('self', blank=True)
+    followers = models.ManyToManyField(User, blank=True, related_name='followers')
+    following = models.ManyToManyField(User, blank=True, related_name='following')
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, default='profile_photos/default.svg')
 
     def __str__(self):

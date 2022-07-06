@@ -50,7 +50,8 @@ def userLogin(request):
 
 def followers(request, user):
     if request.user.is_authenticated:
-        user_list = user_list_init(request)
+        _user = User.objects.get(username=user)
+        user_list = UserList.objects.get(user=_user)
         followers = user_list.followers.all()
         return render(request, 'followers.html', {'followers': followers, 'user': user})
     else:
@@ -59,7 +60,8 @@ def followers(request, user):
 
 def following(request, user):
     if request.user.is_authenticated:
-        user_list = user_list_init(request)
+        _user = User.objects.get(username=user)
+        user_list = UserList.objects.get(user=_user)
         following = user_list.following.all()
         return render(request, 'following.html', {'following': following, 'user': user})
     else:
@@ -70,11 +72,13 @@ def follow(request, user_name):
     if request.user.is_authenticated:
         if request.user.username != user_name:
             user = User.objects.get(username=user_name)
-            follower = UserList.objects.get(user=request.user)
-            following = UserList.objects.get(user=user) 
+            follower_user = User.objects.get(username=request.user.username)
 
-            following.followers.add(follower)
-            follower.following.add(following)
+            follower = UserList.objects.get(user=follower_user)
+            following = UserList.objects.get(user=user)
+            
+            following.followers.add(follower_user)
+            follower.following.add(user)
             return JsonResponse({'status': 'success'})
 
         else:
@@ -87,12 +91,14 @@ def unfollow(request, user_name):
     if request.user.is_authenticated:
         if request.user.username != user_name:
             user = User.objects.get(username=user_name)
-            follower = UserList.objects.get(user=request.user)
-            following = UserList.objects.get(user=user) 
+            follower_user = User.objects.get(username=request.user.username)
 
-            following.followers.remove(follower)
-            follower.following.remove(following)
-            return JsonResponse({'status': 'success'})
+            follower = UserList.objects.get(user=follower_user)
+            following = UserList.objects.get(user=user)
+            
+            following.followers.remove(follower_user)
+            follower.following.remove(user)
+            return JsonResponse({'status': 'success', 'follower': follower.user.username})
 
         else:
             print('cannot follow yourself')
@@ -118,18 +124,24 @@ def profileView(request, user_name):
             is_verified = True
         todos = user_list.todos.all()
         if request.user.username == user_name:
-            len(user_list.followers.all())
+            print('You are viewing your profile')
             return render(request, 'profile.html', {'todo_lists': todo_lists, 'todos': todos, 'user': user_list, 'owner': True, 'is_verified': is_verified})
         else:
             try:
                 user = User.objects.get(username=user_name)
                 user_list = UserList.objects.get(user=user)
+                visitor = User.objects.get(username=request.user.username)
+                followed = False
+                if visitor in user_list.followers.all():
+                    # if request.user has already followed this user (user_name)
+                    followed = True
                 if request.user.username == user:
                     todo_lists = user_list.todoLists.all()
                 else:
                     todo_lists = user_list.todoLists.all().filter(private=False)
                 todos = user_list.todos.all()
-                return render(request, 'profile.html', {'todo_lists': todo_lists, 'todos': todos, 'user': user_list, 'owner': False, 'is_verified': is_verified})
+                print('you are viewing this user', user)
+                return render(request, 'profile.html', {'todo_lists': todo_lists, 'todos': todos, 'user': user_list, 'owner': False, 'is_verified': is_verified, 'followed': followed})
             except:
                 messages.error(request, 'User not found')
                 return redirect('/')
@@ -209,6 +221,17 @@ def changeTodo(request):
             user_list.addTodo(todo)
             return JsonResponse({'ok': True, 'title': todo.title, 'id': todo.id})
         elif data['action'] == "U":
+            if data['do'] == 'rename_todo':
+                todo = Todo.objects.get(id=data['id'])
+                todo.title = data['title']
+                todo.memo = data['memo']
+                todo.save()
+                return JsonResponse({'status': 'success', 'title': todo.title, 'id': todo.id})
+            if data['do'] == 'like_todo':
+                todo = Todo.objects.get(id=data['id'])
+                todo.important = data['important']
+                todo.save()
+                return JsonResponse({'status': 'success', 'important': todo.important, 'id': todo.id})
             todo_id = data['id']
             todo = Todo.objects.get(id=todo_id)
 
@@ -230,3 +253,8 @@ def changeTodo(request):
                 todo.save()
                 response['done'] = False
             return JsonResponse({"ok": True, "response": response})
+        elif data['action'] == "D":
+            if data['do'] == 'delete_todo':
+                todo = Todo.objects.get(id=data['id'])
+                todo.delete()
+                return JsonResponse({'status': 'success', 'id': data['id']})

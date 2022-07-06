@@ -243,3 +243,120 @@ function _alert({ text, duration, type, callback }) {
     }, 500);
   }, dur);
 } //? _alert is a private function
+
+const __do = {
+  follow() {
+    var xhttp = window.XMLHttpRequest
+      ? new window.XMLHttpRequest()
+      : new ActiveXObject("Microsoft.XMLHTTP");
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        var { status } = this.responseText.parse();
+        if (status) {
+          window.location.reload();
+        } else {
+          console.log(status);
+        }
+      }
+    };
+    xhttp.open("GET", "follow/", true);
+    xhttp.send();
+  },
+  unfollow() {
+    var xhttp = window.XMLHttpRequest
+      ? new window.XMLHttpRequest()
+      : new ActiveXObject("Microsoft.XMLHTTP");
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        var { status } = this.responseText.parse();
+        if (status) {
+          window.location.reload();
+        } else {
+          console.log(status);
+        }
+      }
+    };
+    xhttp.open("GET", "unfollow/", true);
+    xhttp.send();
+  },
+  edit_todo(id, title, memo) {
+    var xhttp = window.XMLHttpRequest
+      ? new window.XMLHttpRequest()
+      : new ActiveXObject("Microsoft.XMLHTTP");
+    var data = {
+      action: "U", //? "U" stands for "UPDATE" at CRUD
+      id: id,
+      do: "edit_todo",
+      title: title,
+      memo: memo,
+    }.stringify();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        var { status } = this.responseText.parse();
+        if (status) {
+          window.location.reload();
+        } else {
+          console.log(status);
+        }
+      }
+    };
+    xhttp.open("GET", url + "?data=" + data, true);
+    xhttp.send();
+  },
+  delete_todo(id) {
+    var xhttp = window.XMLHttpRequest
+      ? new window.XMLHttpRequest()
+      : new ActiveXObject("Microsoft.XMLHTTP");
+    var data = {
+      action: "D", //? "D" stands for "DELETE" at CRUD
+      id: id,
+      do: "delete_todo",
+    }.stringify();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        var { status } = this.responseText.parse();
+        if (status) {
+          window.location.reload();
+        } else {
+          console.log(status);
+        }
+      }
+    };
+    xhttp.open("GET", url + "?data=" + data, true);
+    xhttp.send();
+  },
+  like_todo(id, opt) {
+    var xhttp = window.XMLHttpRequest
+      ? new window.XMLHttpRequest()
+      : new ActiveXObject("Microsoft.XMLHTTP");
+    var data = {
+      action: "U", //? "U" stands for "UPDATE" at CRUD
+      id: id,
+      do: "like_todo",
+      important: opt,
+    }.stringify();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        var { status } = this.responseText.parse();
+        if (status) {
+          window.location.reload();
+        } else {
+          console.log(status);
+        }
+      }
+    };
+    xhttp.open("GET", url + "?data=" + data, true);
+    xhttp.send();
+  },
+};
+
+var followButton = document.querySelector("#followButton");
+var unFollowButton = document.querySelector("#unFollowButton");
+var allTodos = document.querySelectorAll(".todos-undone .todo");
+
+if (followButton) {
+  followButton.onclick = __do.follow;
+}
+if (unFollowButton) {
+  unFollowButton.onclick = __do.unfollow;
+}
