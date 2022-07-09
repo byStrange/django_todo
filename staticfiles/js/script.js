@@ -50,7 +50,7 @@ const addTodo = function (todoListSlug) {
                 data-ref="trigger"
               />
             </div>
-            <div class="todo-title">${data.title}</div>
+            <div class="todo-title text-white">${data.title}</div>
           </div>
           <div class="todo-actions">
           <button
@@ -119,12 +119,13 @@ const reload = function ($) {
               var todo = document.querySelector(`#todo${response.id}`);
               var todoTitle = todo.querySelector(".todo-title");
               if (response.done) {
-                todoTitle.className = "todo-title text-muted";
+                todoTitle.className = "todo-title text-muted ";
                 todo.className = "todo todo-done";
                 todo = todo.parentElement;
                 doneTodosContainer.appendChild(todo);
               } else {
                 todoTitle.classList.remove("text-muted");
+                todoTitle.classList.add("text-white");
                 todo.className = "todo shadow-sm border todo-primary";
                 todo = todo.parentElement;
                 unDoneTodosContainer.appendChild(todo);
@@ -360,3 +361,7 @@ if (followButton) {
 if (unFollowButton) {
   unFollowButton.onclick = __do.unfollow;
 }
+
+var bio =
+  bio || document.querySelector("#bio") || document.createElement("span");
+bio.innerHTML = bio.innerHTML.replaceAll("\n", "<br />");

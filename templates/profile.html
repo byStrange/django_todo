@@ -1,18 +1,22 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
-
 <h4
-  class="text-center my-3 pb-3 d-flex align-items-center justify-content-center position-relative"
+  class="text-center my-3 text-white pb-3 d-flex align-items-center justify-content-center position-relative"
 >
   <span class="position-relative">
-    {{ user.user.first_name }} {{ user.user.last_name }} {% if is_verified %}
+    <span class="text-white"
+      >{{ user.user.first_name }} {{ user.user.last_name }}</span
+    >
+    {% if request.user.username != user.user.username %} 
+    <h6 class="text-muted">@{{user.user.username}}</h6>
+    {%endif%}
+    {% if is_verified %}
     <div style="position: absolute; right: -30px; top: -5px">
       <img src="{% static 'verified.png' %}" alt="logo" width="28" />
     </div>
     {% endif %}</span
   >
-  {% if request.user.username != user.user.username %}
-    {% if followed %}
-    <button
+  {% if request.user.username != user.user.username %} {% if followed %}
+  <button
     class="btn btn-outline-primary justify-self-last"
     style="position: absolute; right: 0"
     id="unFollowButton"
@@ -27,13 +31,11 @@
   >
     Follow
   </button>
-  {%endif%}
-  {% endif %}
+  {%endif%} {% endif %}
 </h4>
-
 <div class="row mt-2">
-  <div class="col-md-4">
-    <a href="lists/">
+  <div class="col-md-3 col-sm-3">
+    <a href="lists/" class="text-primary">
       <div
         class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
       >
@@ -45,8 +47,8 @@
       </div>
     </a>
   </div>
-  <div class="col-md-4">
-    <a href="">
+  <div class="col-md-3 col-sm-3">
+    <a href="tasks/">
       <div
         class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
       >
@@ -58,7 +60,7 @@
       </div>
     </a>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-3 col-sm-3">
     <a href="followers/">
       <div
         class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
@@ -71,7 +73,7 @@
       </div>
     </a>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-3 col-sm-3">
     <a href="following/">
       <div
         class="mini-card rounded d-flex justify-content-center align-items-center flex-column p-1"
@@ -86,8 +88,9 @@
   </div>
 </div>
 
+{% if request.user.username == user.user.username %}
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-6 sm-mt-2">
     <div class="form-group">
       <label for="user_name">User Name</label>
       <input
@@ -97,10 +100,11 @@
         name="user_name"
         value="{{ user.user.username }}"
         readonly
+        placeholder="username"
       />
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 sm-mt-2">
     <div class="form-group">
       <label for="user_email">Email</label>
       <input
@@ -110,10 +114,11 @@
         name="user_email"
         value="{{ user.user.email }}"
         readonly
+        placeholder="email"
       />
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 sm-mt-2 mt-2">
     <div class="form-group">
       <label for="user_email">First Name</label>
       <input
@@ -123,10 +128,11 @@
         name="user_first_name"
         value="{{ user.user.first_name }}"
         readonly
+        placeholder="first name"
       />
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 sm-mt-2 mt-2">
     <div class="form-group">
       <label for="user_email">Last Name</label>
       <input
@@ -136,14 +142,40 @@
         name="user_last_name"
         value="{{ user.user.last_name }}"
         readonly
+        placeholder="last name"
       />
     </div>
   </div>
+  <div class="col-md-12 sm-mt-2 mt-2">
+    <div class="form-group">
+      <label for="user_email">Biography</label>
+      <textarea
+        rows="4"
+        type="text"
+        class="form-control"
+        id="user_bio"
+        name="user_bio"
+        readonly
+        placeholder="your biography"
+      >{{ user.bio }}</textarea>
+    </div>
+  </div>
 </div>
+{%else %} <span class="text-muted text-wrap" id="bio"> {{user.bio}} </span> 
+{% endif %}
+
 {% if request.user.username == user.user.username %}
-<div class="action mt-2">
+<div class="action mt-4">
   <button class="btn btn-primary">
     <span>Edit</span>
   </button>
 </div>
-{%endif%} {% endblock content %}
+{%endif%} {% endblock content %} {% block action %}
+{% if request.user.username == user.user.username %}
+<a href="/logout">
+  <button class="btn btn-danger">
+    <i class="fas fa-sign-out-alt"></i>
+  </button>
+</a>
+{%endif %}
+{% endblock %}

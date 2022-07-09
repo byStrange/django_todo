@@ -1,14 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %} {% if following %}
+<h4 class="text-center my-3 pb-3 text-white">{% if request.user.username == user.username%}You are {%else%}{{ user.username }} {%endif%} following</h4>
 
-{% block content %}
-    {% if following %}
-        <h3>You are following:</h3>
-        <ul>
-            {% for user in following %}
-                <li>{{ user.username }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-muted text-center">You are not following anyone.</p>
-    {% endif %}
-{% endblock %}
+<ul style="padding: 0">
+  {% for user in following %}
+  <li class="alert card shadow text-white">
+    <a href="/accounts/{{user.username}}/">{{ user.username }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted text-center">
+  {%if request.user.username == user.username %}You are {%else%}
+  {{request.user.username}} is {% endif %} not following anyone.
+</p>
+{% endif %} {% endblock %}

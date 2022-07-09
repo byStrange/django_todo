@@ -1,3 +1,4 @@
+from email import message
 import json
 from urllib.parse import uses_netloc
 from urllib.request import Request
@@ -21,6 +22,9 @@ def user_list_init(request):
 
 
 def index(request):
+    if request.user.is_authenticated:
+        user_list_init(request)
+    
     return render(request, 'index.html', {'navigation_button': True})
 
 
@@ -30,22 +34,51 @@ def userLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(username)
-        print(password)
         try:
             user = User.objects.get(username=username)
             if user.check_password(password):
                 print(user)
                 login(request, user)
-                messages.success(request, 'You are logged in')
                 return redirect('/')
             else:
                 messages.error(request, 'Wrong password')
                 return redirect('/login')
         except:
-            messages.error(request, 'You are not registered')
+            messages.error(request, 'User not found')
+            return redirect('/login')
     else:
         return render(request, 'login.html')
+
+
+def userRegister(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirmPassword')
+        print(password, '.', confirm_password, '.')
+        if password != confirm_password:
+            messages.error(request, 'Password did\'nt match')
+            return redirect('/register')
+        email = request.POST.get('email')
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        try:
+            user = User.objects.get(username=username)
+            messages.error(
+                request, 'This username is already taken, choose another one!')
+            return redirect('/login')
+        except:
+            user = User.objects.create(
+                username=username,  email=email, first_name=name, last_name=surname)
+            user.set_password(password)
+        user.save()
+        login(request, user)
+        user_list_init(request)
+        return redirect('/')
+    else:
+        return render(request, 'register.html')
 
 
 def followers(request, user):
@@ -53,7 +86,12 @@ def followers(request, user):
         _user = User.objects.get(username=user)
         user_list = UserList.objects.get(user=_user)
         followers = user_list.followers.all()
-        return render(request, 'followers.html', {'followers': followers, 'user': user})
+        print(user_list)
+        print(request.user)
+        if request.user in user_list.followers.all():
+            print('true')
+
+        return render(request, 'followers.html', {'followers': followers, 'user': _user})
     else:
         return render(request, 'login.html')
 
@@ -63,7 +101,7 @@ def following(request, user):
         _user = User.objects.get(username=user)
         user_list = UserList.objects.get(user=_user)
         following = user_list.following.all()
-        return render(request, 'following.html', {'following': following, 'user': user})
+        return render(request, 'following.html', {'following': following, 'user': _user})
     else:
         return render(request, 'login.html')
 
@@ -124,7 +162,7 @@ def profileView(request, user_name):
             is_verified = True
         todos = user_list.todos.all()
         if request.user.username == user_name:
-            print('You are viewing your profile')
+            print(user_list.bio)
             return render(request, 'profile.html', {'todo_lists': todo_lists, 'todos': todos, 'user': user_list, 'owner': True, 'is_verified': is_verified})
         else:
             try:
@@ -148,40 +186,32 @@ def profileView(request, user_name):
     else:
         return render(request, 'login.html')
 
-
-def userRegister(request):
+def allTodosView(request, user_name):
     if request.user.is_authenticated:
-        return redirect('/')
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-        name = request.POST.get('name')
-        surname = request.POST.get('surname')
-        try:
-            user = User.objects.get(username=username)
-            messages.error(
-                request, 'This username is already taken, choose another one!')
-            return redirect('/login')
-        except:
-            user = User.objects.create(
-                username=username,  email=email, first_name=name, last_name=surname)
-            user.set_password(password)
-        user.save()
-        login(request, user)
-        user_list_init(request)
-        return redirect('/')
+        user = User.objects.get(username=user_name)
+        todos = UserList.objects.get(user=user).todos.all()
+        if request.user.username == user_name:
+            isEmpty = todos.count() == 0
+        else:
+            isEmpty = todos.filter(private=False).count() == 0
+        print({'viewer': request.user,'todos': todos, 'user': user, 'isEmpty': isEmpty})
+        return render(request, 'todos.html', {'todos': todos, 'user': user, 'isEmpty': isEmpty})
     else:
-        return render(request, 'register.html')
+        return render(request, 'login.html')
 
 
 def todoListDetail(request, slug, user):
-    user_list = user_list_init(request)
+    _user = User.objects.get(username=user)
+    user_list = UserList.objects.get(user=_user)
     todo_list = user_list.todoLists.get(slug=slug)
     todos = todo_list.todos.all()
     lengthOfDoneTodos = len(todos.filter(done=True))
-    return render(request, 'todo_details.html', {'todos': todos, "todo_list": todo_list, "lengthOfDoneTodos": lengthOfDoneTodos})
-
+    if request.user.username == user:
+        isEmpty = todos.count() == 0
+        return render(request, 'todo_details.html', {'todos': todos, "todo_list": todo_list, "lengthOfDoneTodos": lengthOfDoneTodos, 'isEmpty': isEmpty})
+    else:
+        isEmpty = todos.filter(private=False).count() == 0
+        return render(request, 'todos.html', {'todos': todos, 'user': _user, 'isEmpty': isEmpty})
 
 def todoList(request, user):
     if request.user.is_authenticated:
@@ -213,11 +243,13 @@ def changeTodo(request):
             memo = data['memo']
             important = data['important']
             starred = data['starred']
-            todo_list = TodoList.objects.get(users=user_list, slug=slug)
             todo = Todo.objects.create(
                 title=title, memo=memo, important=important, starred=starred)
             todo.save()
-            todo_list.addTodo(todo)
+            print(slug)
+            if slug:
+                todo_list = TodoList.objects.get(users=user_list, slug=slug)
+                todo_list.addTodo(todo)
             user_list.addTodo(todo)
             return JsonResponse({'ok': True, 'title': todo.title, 'id': todo.id})
         elif data['action'] == "U":

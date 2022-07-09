@@ -1,11 +1,12 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 pb-3">Welcom to Todo</h4>
+<h4 class="text-center my-3 text-white pb-3">Welcom to Todo</h4>
 <p class="text-muted">
   This is a simple todo app that I created to learn how to use Django. This is a
   test version of the app. I will be adding more features to it. I hope you
   enjoy it.
 </p>
-{% comment %} <h5 class="text-center my-3 pb-3">Features</h5>
+{% comment %}
+<h5 class="text-center my-3 pb-3">Features</h5>
 <ul class="list-group w-50">
   <li class="list-group-item">
     <h6 class="text-center">
@@ -37,33 +38,23 @@
       <span class="text-muted">View Tasks</span>
     </h6>
   </li>
-</ul> {% endcomment %}
-
-{% if request.user.is_authenticated %}
-<h5 class="mt-5 pb-3">
-  Continue by clicking one of those button
-</h5>
-<a href="{% url 'logout' %}" class="btn btn-primary btn-block"> Logout </a>
+</ul>
+{% endcomment %} {% if request.user.is_authenticated %}
+<a href="{% url 'logout' %}" class="btn btn-danger"> Logout </a>
 <a
   href="{% url 'accounts:lists' request.user.username %}"
   class="btn btn-outline-secondary"
   >Dashboard</a
 >
-<a href="accounts/{{ request.user.username }}" class="btn btn-outline-secondary"
+<a href="accounts/{{ request.user.username }}" class="btn btn-outline-primary"
   >Profile</a
 >
 {% else %}
-<h5 class="mt-5 pb-3">
-  Start with creating a new account or logging in existing account
-</h5>
-<div class="row">
-  <div class="col-3">
-    <a href="{% url 'register' %}" class="btn btn-primary btn-block"
-      >Register</a
-    >
-  </div>
-  <div class="col-3">
-    <a href="{% url 'login' %}" class="btn btn-primary btn-block">Login</a>
-  </div>
+
+<div>
+  <a href="{% url 'register' %}" class="btn btn-primary btn-block">Register</a>
+  <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-block"
+    >Login</a
+  >
 </div>
 {% endif %} {% endblock content %}

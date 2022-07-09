@@ -131,6 +131,30 @@ a:not(.link) {
   user-select: none;
 }
 
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #151515; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: var(--bs-dark);
+  border: 5px solid #151515;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
+.card.bg-dark form label, .card.bg-dark .form-group label {
+  color: #fff !important;
+}
+
 @media screen and (max-width: 767px) {
   .sm-mt-2 {
     margin-top: .5rem!important;

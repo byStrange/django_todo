@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 pb-3">{% if request.user.username == user%}Your Lists{%else%} {{user}}'s lists {%endif%}</h4>
+<h4 class="text-center my-3 pb-3 text-white">{% if request.user.username == user%}Your Lists{%else%} {{user}}'s lists {%endif%}</h4>
 
 <div class="row">
   {% if todo_lists %}
@@ -42,8 +42,8 @@
 </div>
 
 
-<div class="modal">
-  <div class="modal-dialog shadow border p-4 rounded" style="width: 100%;">
+<div class="modal ">
+  <div class="modal-dialog bg-dark shadow border p-4 rounded" style="width: 100%;">
       <div class="form">
         <span class="fas fa-times" data-action="closeModal" id="closeModal" style="color: var(--bs-danger)"></span>
         <div class="form-group mb-4">

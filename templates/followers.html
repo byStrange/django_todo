@@ -1,14 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %} {% if followers %}
+<h4 class="text-center my-3 pb-3 text-white">{% if request.user.username == user.username%}Your {%else%}{{ user.username }}'s {%endif%} followers</h4>
 
-{% block content %}
-    {% if followers %}
-        <h3>Your followers:</h3>
-        <ul>
-            {% for user in followers %}
-                <li>{{ user.username }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-muted text-center">You haven't any followers yet</p>
-    {% endif %}
-{% endblock %}
+<ul style="padding: 0">
+  {% for follower in followers %}
+  <li class="alert card shadow text-white">
+    <a href="/accounts/{{follower.username}}/">{{ follower.username }}</a
+    ><span class="text-muted"
+      >{% if request.user.username == follower.username%} you
+      {%else%}{%endif%}</span
+    >
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+
+<p class="text-muted text-center">
+  {%if request.user.username == user.username %}You have {%else%}
+  {{request.user.username}} has {% endif %} not any followers yet
+</p>
+{% endif %} {% endblock %}

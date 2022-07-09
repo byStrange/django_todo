@@ -11,6 +11,7 @@ class UserList(models.Model):
     followers = models.ManyToManyField(User, blank=True, related_name='followers')
     following = models.ManyToManyField(User, blank=True, related_name='following')
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, default='profile_photos/default.svg')
+    bio = models.TextField(blank=True)
 
     def __str__(self):
         return self.user.username
@@ -53,6 +54,7 @@ class Todo(models.Model):
     done = models.BooleanField(default=False)
     starred = models.BooleanField(default=False)
     important = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
     priority = models.CharField(choices=PRIORITY, default='primary', blank=True, max_length=10)
     created = models.DateTimeField(auto_now_add=True)
     datecompleted = models.DateTimeField(null=True, blank=True)

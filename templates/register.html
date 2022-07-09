@@ -1,6 +1,8 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 pb-3">Register</h4>
-
+<h4 class="text-center my-3 pb-3 text-white">Register</h4>
+{% for msg in messages %}
+  <div class="alert alert-warning">{{ msg.message }}</div>
+{%endfor%}
 <form class="form" method="POST" action="{% url 'register' %}">
     {% csrf_token %}
     <div class="mb-3">
@@ -10,6 +12,7 @@
         class="form-control"
         name="name"
         placeholder="first name"
+        required
       />
     </div>
     <div class="mb-3">
@@ -19,6 +22,7 @@
         class="form-control"
         name="surname"
         placeholder="last name"
+        required
       />
     </div>
     <div class="mb-3">
@@ -28,6 +32,7 @@
         class="form-control"
         name="email"
         placeholder="email"
+        required
       />
     </div>
   <div class="mb-3">
@@ -38,6 +43,7 @@
       name="username"
       id="username"
       placeholder="username"
+      required
     />
     <small id="emailHelpId" class="form-text text-muted"
       >Pick a new username</small
@@ -51,6 +57,7 @@
       name="password"
       id="password"
       placeholder="password"
+      required
     />
   </div>
   <div class="mb-3">
@@ -58,9 +65,10 @@
     <input
       type="password"
       class="form-control"
-      name="confirmpassword"
+      name="confirmPassword"
       id="confirmPassword"
       placeholder="password"
+      required
     />
   </div>
   <button class="btn btn-primary" type="submit">Register</button>
@@ -68,4 +76,17 @@
     <span class="text-muted">Have already an account?<span> <a href="{% url 'login' %}">Login</a>
   </div>
 </form>
+
 {% endblock %}
+
+{% comment %} {% block script %}
+  <script>
+    var s = document.forms[0], i1=s.querySelector('#password') ,i2=s.querySelector('#confirmPassword'),s_= s.querySelector('button[type="submit"]'); s_
+    .onclick = (event) => {
+      event.preventDefault();
+      if (i1.value==i2.value) {
+        form.submit()
+      }
+    }
+  </script>
+{% endblock script %} {% endcomment %}

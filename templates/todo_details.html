@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 pb-3">{{ todo_list.title }}</h4>
+<h4 class="text-center my-3 pb-3 text-white">{{ todo_list.title }}</h4>
 
 <div class="row mb-4">
   <p class="text-muted">
@@ -20,7 +20,7 @@
               data-ref="trigger"
             />
           </div>
-          <div class="todo-title">{{ todo.title }}</div>
+          <div class="todo-title text-white">{{ todo.title }}</div>
         </div>
         <div class="todo-actions">
           <button
@@ -66,7 +66,7 @@
               data-ref="trigger"
             />
           </div>
-          <div class="todo-title text-muted">{{ todo.title }}</div>
+          <div class="todo-title text-muted text-white">{{ todo.title }}</div>
         </div>
         <div class="todo-actions">
           <button
