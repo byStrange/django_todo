@@ -1,5 +1,6 @@
 from email import message
 import json
+from operator import is_
 from urllib.parse import uses_netloc
 from urllib.request import Request
 from django.shortcuts import render, redirect
@@ -22,10 +23,12 @@ def user_list_init(request):
 
 
 def index(request):
+    is_authenticated = False
     if request.user.is_authenticated:
         user_list_init(request)
+        is_authenticated = True
     
-    return render(request, 'index.html', {'navigation_button': True})
+    return render(request, 'index.html', {'navigation_button': True, 'is_authenticated': is_authenticated} )
 
 
 def userLogin(request):
@@ -68,11 +71,11 @@ def userRegister(request):
             user = User.objects.get(username=username)
             messages.error(
                 request, 'This username is already taken, choose another one!')
-            return redirect('/login')
+            return redirect('/register')
         except:
             user = User.objects.create(
                 username=username,  email=email, first_name=name, last_name=surname)
-            user.set_password(password)
+            user.set_password(password) # for hashing password
         user.save()
         login(request, user)
         user_list_init(request)
@@ -80,6 +83,32 @@ def userRegister(request):
     else:
         return render(request, 'register.html')
 
+def userEdit(request, user_name): 
+    if request.user.is_authenticated:
+        user_list = UserList.objects.get(user=request.user)
+        user = User.objects.get(username=request.user.username)
+        data = request.POST
+        if data:
+            # if users new username is existent, return error
+            if User.objects.filter(username=data['username']).exists():
+                messages.error(request, 'This username is already taken, choose another one!')
+                return redirect('/accounts/' + str(request.user.username))
+            else:
+                user.username = data['username']
+            # if users new email is existent, return error
+            if User.objects.filter(email=data['email']).exists():
+                messages.error(request, 'This email is already taken, choose another one!')
+                return redirect('/accounts/' + str(request.user.username) + '/')
+            else:
+                user.email = data.get('email')
+            user_list.bio = data.get('bio')
+            user.first_name = data.get('first_name')
+            user.last_name = data.get('last_name')
+            user.save()
+            messages.success(request, 'Account updated')
+            return redirect('/accounts/' + str(request.user.username) + '/')
+        else:
+            return render(request, 'profile.html')
 
 def followers(request, user):
     if request.user.is_authenticated:
@@ -211,7 +240,7 @@ def todoListDetail(request, slug, user):
         return render(request, 'todo_details.html', {'todos': todos, "todo_list": todo_list, "lengthOfDoneTodos": lengthOfDoneTodos, 'isEmpty': isEmpty})
     else:
         isEmpty = todos.filter(private=False).count() == 0
-        return render(request, 'todos.html', {'todos': todos, 'user': _user, 'isEmpty': isEmpty})
+        return render(request, 'todos.html', {'todos': todos, 'user': _user, 'isEmpty': isEmpty, 'todo_list': todo_list})
 
 def todoList(request, user):
     if request.user.is_authenticated:

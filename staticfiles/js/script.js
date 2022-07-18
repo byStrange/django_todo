@@ -363,5 +363,69 @@ if (unFollowButton) {
 }
 
 var bio =
-  bio || document.querySelector("#bio") || document.createElement("span");
+  bio || document.querySelector("#bio") || document.createElement("span"); //? due to not to raise error if bio is not found
 bio.innerHTML = bio.innerHTML.replaceAll("\n", "<br />");
+
+var editButton =
+  editButton ||
+  document.querySelector("#editButton") ||
+  document.createElement("div"); //? due to not to raise error if editButton is not found
+editButton.onclick = edit;
+
+var editSection =
+  editSection ||
+  document.querySelector("#editSection") ||
+  document.createElement("div"); //? due to not to raise error if editSection is not found
+
+var cancelButton =
+  cancelButton ||
+  document.querySelector("#cancelButton") ||
+  document.createElement("div"); //? due to not to raise error if cancelButton is not found
+cancelButton.onclick = cancel;
+
+var saveButton =
+  saveButton ||
+  document.querySelector("#saveButton") ||
+  document.createElement("button"); //? due to not to raise error if saveButton is not found
+saveButton.onclick = save;
+
+function edit() {
+  editSection.classList.remove("closed");
+  editSection.querySelectorAll("input, textarea").forEach((field) => {
+    field.removeAttribute("readonly");
+    field.removeAttribute("disabled");
+  });
+
+  cancelButton.classList.remove("d-none");
+  saveButton.classList.remove("d-none");
+  editButton.classList.add("d-none");
+}
+
+function cancel() {
+  editSection.classList.add("closed");
+  cancelButton.classList.add("d-none");
+  saveButton.classList.add("d-none");
+  editButton.classList.remove("d-none");
+}
+
+function sve() {
+  var data = {};
+  var inputs = document.querySelectorAll(
+    ":is(.edit-section) textarea, input, select"
+  );
+  var fields = ["username", "email", "first_name", "last_name", "bio"];
+  inputs.forEach((input, i) => {
+    data[fields[i]] = input.value;
+  });
+  var xhttp = window.XMLHttpRequest
+    ? new window.XMLHttpRequest()
+    : new ActiveXObject("Microsoft.XMLHTTP");
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      console.log(this.responseText);
+    }
+  };
+  data= data.stringify();
+  xhttp.open("POST", "edit/?data=" + data, true);
+  xhttp.send();
+}

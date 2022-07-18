@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<h4 class="text-center my-3 text-white pb-3">Welcom to Todo</h4>
+<h4 class="text-center my-3 text-white pb-3">{% if is_authenticated %} Dear {{ request.user.username }} {% endif %}Welcom to Todo</h4>
 <p class="text-muted">
   This is a simple todo app that I created to learn how to use Django. This is a
   test version of the app. I will be adding more features to it. I hope you
@@ -39,7 +39,7 @@
     </h6>
   </li>
 </ul>
-{% endcomment %} {% if request.user.is_authenticated %}
+{% endcomment %} {% if is_authenticated %}
 <a href="{% url 'logout' %}" class="btn btn-danger"> Logout </a>
 <a
   href="{% url 'accounts:lists' request.user.username %}"

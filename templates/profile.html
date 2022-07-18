@@ -89,17 +89,18 @@
 </div>
 
 {% if request.user.username == user.user.username %}
-<div class="row">
+<form class="row edit-section closed" id="editSection" action="edit/">
+  {% csrf_token %}
   <div class="col-md-6 sm-mt-2">
     <div class="form-group">
       <label for="user_name">User Name</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control bg-dark text-white border border-primary"
         id="user_name"
-        name="user_name"
+        name="username"
         value="{{ user.user.username }}"
-        readonly
+        disabled
         placeholder="username"
       />
     </div>
@@ -109,53 +110,53 @@
       <label for="user_email">Email</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control bg-dark text-white border border-primary"
         id="user_email"
-        name="user_email"
+        name="email"
         value="{{ user.user.email }}"
-        readonly
+        disabled
         placeholder="email"
       />
     </div>
   </div>
-  <div class="col-md-6 sm-mt-2 mt-2">
+  <div class="col-md-6 sm-mt-2 mt-3">
     <div class="form-group">
       <label for="user_email">First Name</label>
       <input
         type="text"
-        class="form-control"
-        id="user_first_name"
-        name="user_first_name"
+        class="form-control bg-dark text-white border border-primary"
+        id="user_email"
+        name="first_name"
         value="{{ user.user.first_name }}"
-        readonly
+        disabled
         placeholder="first name"
       />
     </div>
   </div>
-  <div class="col-md-6 sm-mt-2 mt-2">
+  <div class="col-md-6 sm-mt-2 mt-3">
     <div class="form-group">
-      <label for="user_email">Last Name</label>
+      <label for="user_last_name">Last Name</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control bg-dark text-white border border-primary"
         id="user_last_name"
-        name="user_last_name"
+        name="last_name"
         value="{{ user.user.last_name }}"
-        readonly
+        disabled
         placeholder="last name"
       />
     </div>
   </div>
-  <div class="col-md-12 sm-mt-2 mt-2">
+  <div class="col-md-12 sm-mt-2 mt-3">
     <div class="form-group">
-      <label for="user_email">Biography</label>
+      <label for="user_bio">Biography</label>
       <textarea
         rows="4"
         type="text"
-        class="form-control"
+        class="form-control bg-dark text-white border border-primary bg-dark"
         id="user_bio"
-        name="user_bio"
-        readonly
+        name="bio"
+        disabled
         placeholder="your biography"
       >{{ user.bio }}</textarea>
     </div>
@@ -166,8 +167,14 @@
 
 {% if request.user.username == user.user.username %}
 <div class="action mt-4">
-  <button class="btn btn-primary">
+  <button class="btn btn-primary" id="editButton" onclick="event.preventDefault()">
     <span>Edit</span>
+  </button>
+  <button class="btn btn-success d-none" id="saveButton">
+    <span>Save</span>
+  </button>
+  <button class="btn btn-outline-danger d-none" id="cancelButton">
+    <span>Cancel</span>
   </button>
 </div>
 {%endif%} {% endblock content %} {% block action %}
