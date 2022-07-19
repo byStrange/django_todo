@@ -161,23 +161,20 @@
       >{{ user.bio }}</textarea>
     </div>
   </div>
-</div>
+</form>
 {%else %} <span class="text-muted text-wrap" id="bio"> {{user.bio}} </span> 
 {% endif %}
-
 {% if request.user.username == user.user.username %}
 <div class="action mt-4">
-  <button class="btn btn-primary" id="editButton" onclick="event.preventDefault()">
-    <span>Edit</span>
-  </button>
-  <button class="btn btn-success d-none" id="saveButton">
-    <span>Save</span>
-  </button>
-  <button class="btn btn-outline-danger d-none" id="cancelButton">
-    <span>Cancel</span>
-  </button>
+  <div class="btn btn-primary" id="editButton" onclick="event.preventDefault()">
+    <span>Show more</span>
+  </div>
+  <div class="btn btn-outline-primary d-none" id="cancelButton">
+    <span>Show less</span>
+  </div>
 </div>
-{%endif%} {% endblock content %} {% block action %}
+{%endif%}
+{% endblock %} {% block action %}
 {% if request.user.username == user.user.username %}
 <a href="/logout">
   <button class="btn btn-danger">

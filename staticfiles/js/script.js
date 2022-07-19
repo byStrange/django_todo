@@ -387,15 +387,9 @@ var saveButton =
   saveButton ||
   document.querySelector("#saveButton") ||
   document.createElement("button"); //? due to not to raise error if saveButton is not found
-saveButton.onclick = save;
 
 function edit() {
   editSection.classList.remove("closed");
-  editSection.querySelectorAll("input, textarea").forEach((field) => {
-    field.removeAttribute("readonly");
-    field.removeAttribute("disabled");
-  });
-
   cancelButton.classList.remove("d-none");
   saveButton.classList.remove("d-none");
   editButton.classList.add("d-none");
@@ -408,24 +402,24 @@ function cancel() {
   editButton.classList.remove("d-none");
 }
 
-function sve() {
-  var data = {};
-  var inputs = document.querySelectorAll(
-    ":is(.edit-section) textarea, input, select"
-  );
-  var fields = ["username", "email", "first_name", "last_name", "bio"];
-  inputs.forEach((input, i) => {
-    data[fields[i]] = input.value;
-  });
-  var xhttp = window.XMLHttpRequest
-    ? new window.XMLHttpRequest()
-    : new ActiveXObject("Microsoft.XMLHTTP");
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      console.log(this.responseText);
-    }
-  };
-  data= data.stringify();
-  xhttp.open("POST", "edit/?data=" + data, true);
-  xhttp.send();
-}
+// function sve() {
+//   var data = {};
+//   var inputs = document.querySelectorAll(
+//     ":is(.edit-section) textarea, input, select"
+//   );
+//   var fields = ["username", "email", "first_name", "last_name", "bio"];
+//   inputs.forEach((input, i) => {
+//     data[fields[i]] = input.value;
+//   });
+//   var xhttp = window.XMLHttpRequest
+//     ? new window.XMLHttpRequest()
+//     : new ActiveXObject("Microsoft.XMLHTTP");
+//   xhttp.onreadystatechange = function () {
+//     if (xhttp.readyState == 4 && xhttp.status == 200) {
+//       console.log(this.responseText);
+//     }
+//   };
+//   data= data.stringify();
+//   // xhttp.open("POST", "edit/?data=" + data, true);
+//   // xhttp.send();
+// }
